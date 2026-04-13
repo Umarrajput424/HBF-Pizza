@@ -2,129 +2,211 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AFFINEX | AR Menu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AFFINEX | Premium AR Experience</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     
     <style>
-        :root { --primary-red: #d32f2f; --primary-red-dark: #b71c1c; --dark-bg: #121212; --card-bg: #1e1e1e; --text-white: #ffffff; --text-gray: #aaaaaa; }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--dark-bg); color: var(--text-white); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        
-        header { background-color: #000000; padding: 20px 15px; text-align: center; border-bottom: 2px solid var(--primary-red); position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        .logo { font-size: 1.8rem; font-weight: 800; color: var(--primary-red); letter-spacing: 2px; margin-bottom: 15px; }
-
-        /* Search Bar Styles */
-        .search-container { position: relative; width: 100%; max-width: 500px; margin: 0 auto; }
-        .search-bar { width: 100%; padding: 12px 15px 12px 45px; background-color: var(--card-bg); border: 1px solid #333; border-radius: 50px; color: var(--text-white); font-size: 14px; box-sizing: border-box; transition: 0.3s; }
-        .search-bar:focus { outline: none; border-color: var(--primary-red); box-shadow: 0 0 10px rgba(211, 47, 47, 0.4); }
-        .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 18px; color: #555; }
-        .close-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 18px; color: #555; cursor: pointer; visibility: hidden; }
-
-        /* AR Viewer Area */
-        .viewer-box { width: 100%; flex-grow: 1; position: relative; background: #000000; overflow: hidden; }
-        model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
-
-        /* AR Button (Centralized and Elite) */
-        #ar-button {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: var(--primary-red); color: white; border: none; padding: 15px 35px;
-            border-radius: 50px; font-weight: bold; font-size: 16px; cursor: pointer;
-            box-shadow: 0 8px 30px rgba(211, 47, 47, 0.6);
-            display: flex; align-items: center; gap: 10px; transition: 0.3s;
+        /* CSS Variables for Ultimate Control */
+        :root { 
+            --primary-red: #e50914; 
+            --red-glow: rgba(229, 9, 20, 0.6);
+            --dark-bg: #050505; 
+            --glass-bg: rgba(20, 20, 20, 0.7);
+            --text-main: #ffffff; 
+            --text-muted: #888888;
         }
-        #ar-button:hover { background: var(--primary-red-dark); box-shadow: 0 10px 40px rgba(211, 47, 47, 0.8); }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        
+        body { 
+            background: var(--dark-bg); color: var(--text-main); 
+            height: 100vh; overflow: hidden; display: flex; flex-direction: column; 
+            animation: fadeIn 1s ease-in-out;
+        }
 
-        /* Bottom Details */
-        .details { background-color: #000000; padding: 25px 20px; text-align: center; border-top: 1px solid #333; }
-        .price { color: var(--primary-red); font-size: 1.5rem; margin-top: 10px; font-weight: bold; }
-        .menu-title { margin: 0; font-weight: 800; font-size: 1.5rem; color: var(--text-white); text-transform: uppercase; letter-spacing: 1px; }
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes pulseGlow { 
+            0% { box-shadow: 0 0 10px var(--red-glow); } 
+            50% { box-shadow: 0 0 25px var(--primary-red); } 
+            100% { box-shadow: 0 0 10px var(--red-glow); } 
+        }
 
-        footer { text-align: center; padding: 15px; background: #000; color: #444; font-size: 0.7rem; font-weight: bold; }
+        /* Header (Glassmorphism) */
+        header { 
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin: 0 auto; }
+        .logo { font-size: 1.5rem; font-weight: 900; color: var(--text-main); letter-spacing: 3px; }
+        .logo span { color: var(--primary-red); }
+
+        /* Search Bar Setup */
+        .search-box { position: relative; flex-grow: 1; margin-left: 20px; }
+        .search-input { 
+            width: 100%; padding: 10px 40px 10px 15px; border-radius: 30px;
+            background: rgba(255, 255, 255, 0.1); border: 1px solid transparent;
+            color: white; outline: none; transition: all 0.3s ease;
+        }
+        .search-input:focus { 
+            background: rgba(0, 0, 0, 0.8); border: 1px solid var(--primary-red);
+            box-shadow: 0 0 15px rgba(229, 9, 20, 0.3);
+        }
+        .search-input::placeholder { color: #aaa; }
+        .search-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--text-muted); pointer-events: none; }
+
+        /* 3D Viewer Area */
+        .viewer-container { width: 100%; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
+        model-viewer { 
+            width: 100%; height: 100%; outline: none; --poster-color: transparent;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+        }
+
+        /* Custom Loading Bar for Model Viewer */
+        #progress-bar { width: 100%; height: 3px; background-color: #222; position: absolute; top: 0; z-index: 10; transition: opacity 0.3s; }
+        #update-bar { width: 0%; height: 100%; background-color: var(--primary-red); transition: width 0.3s; }
+        .hide { opacity: 0; pointer-events: none; }
+
+        /* Floating Bottom Card (Glassmorphism) */
+        .bottom-card {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px;
+            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 25px;
+            padding: 25px; z-index: 100; text-align: center;
+            animation: slideUp 0.8s ease-out 0.3s both;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+
+        .dish-title { font-size: 1.6rem; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; }
+        .dish-price { color: var(--primary-red); font-size: 1.4rem; font-weight: 700; margin-bottom: 20px; }
+        
+        /* The Elite AR Button */
+        #ar-button {
+            width: 100%; padding: 16px; border-radius: 15px; border: none;
+            background: linear-gradient(135deg, var(--primary-red), #900000);
+            color: white; font-size: 1.1rem; font-weight: bold; text-transform: uppercase;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+            animation: pulseGlow 2.5s infinite; transition: transform 0.2s;
+        }
+        #ar-button:active { transform: scale(0.96); }
+
+        /* Custom Toast Notification */
+        #toast {
+            position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px);
+            background: rgba(229, 9, 20, 0.9); color: white; padding: 10px 25px;
+            border-radius: 50px; font-weight: 600; font-size: 0.9rem; opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 200; pointer-events: none;
+        }
+        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
     </style>
 </head>
 <body>
 
+    <div id="toast">Model not found!</div>
+
     <header>
-        <div class="logo">AFFINEX</div>
-        <div class="search-container">
-            <span class="search-icon">&#128269;</span>
-            <input type="text" id="search-bar" class="search-bar" placeholder="Search dish (e.g. tissue box)..." onkeyup="searchModel()">
-            <span id="close-icon" class="close-icon" onclick="clearSearch()">&#10006;</span>
+        <div class="header-content">
+            <div class="logo">AFFINEX<span>.</span></div>
+            <div class="search-box">
+                <input type="text" id="search-input" class="search-input" placeholder="Search menu..." onkeypress="handleSearch(event)">
+                <span class="search-icon">🔍</span>
+            </div>
         </div>
     </header>
 
-    <div class="viewer-box">
+    <div class="viewer-container">
+        <div id="progress-bar"><div id="update-bar"></div></div>
+
         <model-viewer 
-            id="dish-viewer"
+            id="main-viewer"
             src="3DModel.glb" 
             ar 
             ar-modes="webxr scene-viewer quick-look" 
             camera-controls 
-            shadow-intensity="2" 
+            shadow-intensity="1.5" 
+            exposure="1"
             environment-image="neutral"
-            auto-rotate>
+            auto-rotate
+            rotation-per-second="30deg">
             
             <button slot="ar-button" id="ar-button">
-                <span>🍽️</span> VIEW ON YOUR TABLE
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3zM12 8v8M8 12h8"/></svg>
+                LAUNCH IN AR
             </button>
         </model-viewer>
     </div>
 
-    <div class="details">
-        <h2 id="dish-name" class="menu-title">Premium Tissue Box</h2>
-        <div class="price">Rs. 250</div>
+    <div class="bottom-card">
+        <h1 class="dish-title" id="item-name">Premium Box</h1>
+        <div class="dish-price" id="item-price">Rs. 250</div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.4;">
+            Experience our premium quality in true 3D scale. Scan your table to place.
+        </p>
     </div>
 
-    <footer>
-        POWERED BY AFFINEX DIGITAL SOLUTIONS
-    </footer>
-
     <script>
-        const viewer = document.getElementById('dish-viewer');
-        const dishName = document.getElementById('dish-name');
-        const searchInput = document.getElementById('search-bar');
-        const closeIcon = document.getElementById('close-icon');
+        // UX: Handle Loading Progress Bar
+        const modelViewer = document.querySelector('#main-viewer');
+        const progressBar = document.querySelector('#progress-bar');
+        const updateBar = document.querySelector('#update-bar');
 
-        function searchModel() {
-            const query = searchInput.value.toLowerCase().trim();
-            
-            // Show close icon if user typing
-            if (query.length > 0) {
-                closeIcon.style.visibility = 'visible';
+        modelViewer.addEventListener('progress', (event) => {
+            const progress = event.detail.totalProgress * 100;
+            updateBar.style.width = `${progress}%`;
+            if (progress === 100) {
+                setTimeout(() => { progressBar.classList.add('hide'); }, 500);
             } else {
-                closeIcon.style.visibility = 'hidden';
+                progressBar.classList.remove('hide');
             }
+        });
 
-            // Simple search logic for now
-            if (query === 'tissue box') {
-                loadModel('3DModel.glb', 'Premium Tissue Box', '250');
-            } else if (query === 'burger') {
-                // Future Placeholder
-                alert('We are working on adding Burger model!');
-            } else {
-                // If nothing matches, keep current model
-                dishName.innerText = "Premium Tissue Box";
-            }
-        }
+        // UX: Advanced Search Logic & UI Update
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                const query = document.getElementById('search-input').value.toLowerCase().trim();
+                const itemName = document.getElementById('item-name');
+                const itemPrice = document.getElementById('item-price');
 
-        function clearSearch() {
-            searchInput.value = '';
-            closeIcon.style.visibility = 'hidden';
-            // Reset to default
-            loadModel('3DModel.glb', 'Premium Tissue Box', '250');
-        }
+                document.getElementById('search-input').blur(); // Hide keyboard on mobile
 
-        function loadModel(path, name, price) {
-            // Only update if path is different
-            if (viewer.src !== path) {
-                viewer.src = path;
-                dishName.innerText = name;
-                document.querySelector('.price').innerText = `Rs. ${price}`;
-                searchInput.blur(); // Hide keyboard
+                if (query.includes('tissue') || query.includes('box')) {
+                    changeModel('3DModel.glb', 'Premium Box', '250');
+                } else if (query !== '') {
+                    showToast(`"${query}" is not available yet.`);
+                }
             }
         }
 
-        // Test on mobile for AR button!
+        // Function to smoothly change models
+        function changeModel(src, name, price) {
+            if (modelViewer.src !== src) {
+                // Reset progress bar
+                updateBar.style.width = '0%';
+                progressBar.classList.remove('hide');
+                
+                // Update Data
+                modelViewer.src = src;
+                document.getElementById('item-name').innerText = name;
+                document.getElementById('item-price').innerText = `Rs. ${price}`;
+            }
+        }
+
+        // Function to show Toast Notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
     </script>
 
 </body>

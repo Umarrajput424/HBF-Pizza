@@ -3,199 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AFFINEX | Premium AR Menu</title>
-    
+    <title>AFFINEX | AR MENU</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     
     <style>
-        :root {
-            --red: #ff0000;
-            --dark-red: #990000;
-            --black: #050505;
-            --card: rgba(20, 20, 20, 0.8);
-        }
+        :root { --red: #ff0000; --black: #000000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        
+        body { background: var(--black); color: white; height: 100vh; overflow: hidden; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial Black', sans-serif; }
-
-        body {
-            background-color: var(--black);
-            color: white;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Top Header Animation */
+        /* Premium Header */
         header {
-            padding: 20px;
-            background: linear-gradient(to bottom, #000, transparent);
-            z-index: 100;
-            animation: slideDown 0.8s ease;
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+            padding: 20px; text-align: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: 5px; color: var(--red); text-shadow: 0 0 10px var(--red); }
+
+        /* Search Bar */
+        .search-box { margin-top: 15px; width: 100%; display: flex; justify-content: center; }
+        .search-input {
+            width: 80%; padding: 10px 20px; border-radius: 50px;
+            background: rgba(255,255,255,0.1); border: 1px solid var(--red);
+            color: white; outline: none; backdrop-filter: blur(5px);
         }
 
-        @keyframes slideDown {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
-        }
-
-        .logo {
-            color: var(--red);
-            text-align: center;
-            font-size: 2rem;
-            letter-spacing: 5px;
-            text-shadow: 0 0 15px var(--red);
-            margin-bottom: 15px;
-        }
-
-        /* Search Bar UI */
-        .search-container {
-            width: 90%;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .search-bar {
-            width: 100%;
-            padding: 12px 20px;
-            border-radius: 50px;
-            border: 1px solid var(--red);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            outline: none;
-            backdrop-filter: blur(10px);
-            font-size: 0.9rem;
-        }
-
-        /* 3D Model Styling */
-        .viewer-box {
-            flex-grow: 1;
-            position: relative;
-        }
-
+        /* 3D Viewer Area */
         model-viewer {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100vh;
+            background-color: var(--black);
             --poster-color: transparent;
-            background: radial-gradient(circle, #222 0%, #000 100%);
         }
 
-        /* Floating Bottom Card */
-        .bottom-card {
-            position: absolute;
-            bottom: 20px;
-            left: 5%;
-            width: 90%;
-            background: var(--card);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-            padding: 25px;
-            border: 1px solid rgba(255, 0, 0, 0.2);
-            text-align: center;
-            animation: slideUp 0.8s ease;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-
-        .dish-info h2 { font-size: 1.5rem; margin-bottom: 5px; text-transform: uppercase; }
-        .dish-info p { color: var(--red); font-size: 1.3rem; font-weight: bold; margin-bottom: 20px; }
-
-        /* 🔥 The Extreme AR Button */
+        /* 🔥 ORIGINAL AR BUTTON (This opens the camera) */
         #ar-button {
-            width: 100%;
-            padding: 18px;
-            border-radius: 20px;
+            background-color: var(--red);
+            border-radius: 50px;
             border: none;
-            background: var(--red);
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 18px 35px;
             color: white;
-            font-weight: 900;
-            font-size: 1rem;
-            letter-spacing: 2px;
-            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 10px;
             box-shadow: 0 0 20px var(--red);
+            z-index: 999;
+            cursor: pointer;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 10px var(--red); }
-            50% { transform: scale(1.05); box-shadow: 0 0 25px var(--red); }
-            100% { transform: scale(1); box-shadow: 0 0 10px var(--red); }
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
+            100% { transform: translateX(-50%) scale(1); }
         }
 
-        /* Hide Default AR Button of Google */
-        #ar-button[slot="ar-button"] {
-            display: flex;
+        /* Info Overlay */
+        .info-card {
+            position: absolute; bottom: 120px; width: 100%;
+            text-align: center; pointer-events: none;
         }
+        .price { color: var(--red); font-size: 1.8rem; font-weight: 900; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">AFFINEX</div>
-        <div class="search-container">
-            <input type="text" id="search" class="search-bar" placeholder="SEARCH MENU (e.g. Tissue)..." onkeyup="checkSearch()">
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="Search dish..." id="searchBar">
         </div>
     </header>
 
-    <div class="viewer-box">
-        <model-viewer 
-            id="menu-viewer"
-            src="3DModel.glb" 
-            ar 
-            ar-modes="webxr scene-viewer quick-look" 
-            camera-controls 
-            auto-rotate 
-            shadow-intensity="2" 
-            exposure="1"
-            ar-scale="auto"
-            ar-placement="floor">
-            
-            <div class="bottom-card">
-                <div class="dish-info">
-                    <h2 id="dish-name">Premium Tissue Box</h2>
-                    <p id="dish-price">Rs. 250</p>
-                </div>
-                
-                <button slot="ar-button" id="ar-button">
-                    🚀 VIEW IN CAMERA (AR)
-                </button>
-            </div>
+    <model-viewer 
+        src="3DModel.glb" 
+        ar 
+        ar-modes="webxr scene-viewer quick-look" 
+        camera-controls 
+        auto-rotate 
+        shadow-intensity="2"
+        environment-image="neutral"
+        ar-placement="floor">
+        
+        <button slot="ar-button" id="ar-button">
+            <span>📷</span> VIEW IN YOUR ROOM
+        </button>
 
-        </model-viewer>
-    </div>
+        <div class="info-card">
+            <h2 id="dishName">Premium Tissue Box</h2>
+            <div class="price">Rs. 250</div>
+        </div>
+
+    </model-viewer>
 
     <script>
-        const viewer = document.querySelector('#menu-viewer');
-        const dishName = document.querySelector('#dish-name');
-
-        function checkSearch() {
-            let input = document.getElementById('search').value.toLowerCase();
-            
-            // Simple logic: agar user 'tissue' likhe to name update ho
-            if(input.includes("tissue")) {
-                dishName.innerHTML = "Premium Tissue Box";
-                dishName.style.color = "#ff0000";
-            } else if (input !== "") {
-                dishName.innerHTML = "Item Not Found";
-                dishName.style.color = "white";
+        // Simple Working Search
+        document.getElementById('searchBar').addEventListener('keyup', (e) => {
+            let val = e.target.value.toLowerCase();
+            let nameTag = document.getElementById('dishName');
+            if(val.includes('tissue')) {
+                nameTag.innerText = "Premium Tissue Box";
+                nameTag.style.color = "red";
+            } else if(val === "") {
+                nameTag.innerText = "Premium Tissue Box";
+                nameTag.style.color = "white";
             } else {
-                dishName.innerHTML = "Premium Tissue Box";
-                dishName.style.color = "white";
-            }
-        }
-
-        // Camera check alert for testing
-        viewer.addEventListener('ar-status', (event) => {
-            if(event.detail.status === 'failed') {
-                alert("AR launch nahi ho saka. Play Store se 'Google Play Services for AR' update karein.");
+                nameTag.innerText = "Item Not Found";
             }
         });
     </script>

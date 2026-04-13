@@ -3,211 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AFFINEX | Premium AR Experience</title>
+    <title>AFFINEX | Extreme Mobile AR</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     
     <style>
-        /* CSS Variables for Ultimate Control */
         :root { 
-            --primary-red: #e50914; 
-            --red-glow: rgba(229, 9, 20, 0.6);
-            --dark-bg: #050505; 
-            --glass-bg: rgba(20, 20, 20, 0.7);
-            --text-main: #ffffff; 
-            --text-muted: #888888;
+            --primary-red: #ff0000; 
+            --bg-black: #000000;
+            --glass: rgba(255, 255, 255, 0.1);
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            background: var(--dark-bg); color: var(--text-main); 
-            height: 100vh; overflow: hidden; display: flex; flex-direction: column; 
-            animation: fadeIn 1s ease-in-out;
+            background: var(--bg-black); color: white; 
+            height: 100vh; overflow: hidden; font-family: 'Arial', sans-serif;
         }
 
-        /* Animations */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes pulseGlow { 
-            0% { box-shadow: 0 0 10px var(--red-glow); } 
-            50% { box-shadow: 0 0 25px var(--primary-red); } 
-            100% { box-shadow: 0 0 10px var(--red-glow); } 
-        }
-
-        /* Header (Glassmorphism) */
-        header { 
+        /* Top Search & Logo Area */
+        header {
             position: fixed; top: 0; width: 100%; z-index: 100;
-            background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05);
-            animation: slideDown 0.8s ease-out;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+            padding: 20px; text-align: center;
         }
-
-        .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin: 0 auto; }
-        .logo { font-size: 1.5rem; font-weight: 900; color: var(--text-main); letter-spacing: 3px; }
-        .logo span { color: var(--primary-red); }
-
-        /* Search Bar Setup */
-        .search-box { position: relative; flex-grow: 1; margin-left: 20px; }
-        .search-input { 
-            width: 100%; padding: 10px 40px 10px 15px; border-radius: 30px;
-            background: rgba(255, 255, 255, 0.1); border: 1px solid transparent;
-            color: white; outline: none; transition: all 0.3s ease;
+        .logo { font-size: 1.8rem; font-weight: 900; letter-spacing: 5px; color: var(--primary-red); margin-bottom: 15px; }
+        
+        .search-container {
+            width: 100%; max-width: 400px; margin: 0 auto; position: relative;
         }
-        .search-input:focus { 
-            background: rgba(0, 0, 0, 0.8); border: 1px solid var(--primary-red);
-            box-shadow: 0 0 15px rgba(229, 9, 20, 0.3);
+        .search-bar {
+            width: 100%; padding: 12px 20px; border-radius: 50px;
+            background: var(--glass); border: 1px solid rgba(255,0,0,0.3);
+            color: white; outline: none; backdrop-filter: blur(10px);
         }
-        .search-input::placeholder { color: #aaa; }
-        .search-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--text-muted); pointer-events: none; }
 
         /* 3D Viewer Area */
-        .viewer-container { width: 100%; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
-        model-viewer { 
-            width: 100%; height: 100%; outline: none; --poster-color: transparent;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+        .viewer-wrap { width: 100%; height: 100vh; position: absolute; top: 0; left: 0; }
+        model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
+
+        /* Floating Info Card */
+        .info-card {
+            position: absolute; bottom: 30px; left: 5%; width: 90%;
+            background: rgba(15, 15, 15, 0.85); backdrop-filter: blur(20px);
+            border-radius: 25px; padding: 25px; border: 1px solid rgba(255,0,0,0.2);
+            text-align: center; z-index: 10;
         }
+        .title { font-size: 1.4rem; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
+        .price { color: var(--primary-red); font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; }
 
-        /* Custom Loading Bar for Model Viewer */
-        #progress-bar { width: 100%; height: 3px; background-color: #222; position: absolute; top: 0; z-index: 10; transition: opacity 0.3s; }
-        #update-bar { width: 0%; height: 100%; background-color: var(--primary-red); transition: width 0.3s; }
-        .hide { opacity: 0; pointer-events: none; }
-
-        /* Floating Bottom Card (Glassmorphism) */
-        .bottom-card {
-            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px;
-            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 25px;
-            padding: 25px; z-index: 100; text-align: center;
-            animation: slideUp 0.8s ease-out 0.3s both;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-        }
-
-        .dish-title { font-size: 1.6rem; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; }
-        .dish-price { color: var(--primary-red); font-size: 1.4rem; font-weight: 700; margin-bottom: 20px; }
-        
-        /* The Elite AR Button */
+        /* 🔥 Extreme AR Button */
         #ar-button {
-            width: 100%; padding: 16px; border-radius: 15px; border: none;
-            background: linear-gradient(135deg, var(--primary-red), #900000);
-            color: white; font-size: 1.1rem; font-weight: bold; text-transform: uppercase;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
-            animation: pulseGlow 2.5s infinite; transition: transform 0.2s;
+            width: 100%; padding: 18px; border-radius: 15px; border: none;
+            background: var(--primary-red); color: white; font-weight: 900;
+            font-size: 1.1rem; letter-spacing: 1px; cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.4);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        #ar-button:active { transform: scale(0.96); }
-
-        /* Custom Toast Notification */
-        #toast {
-            position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px);
-            background: rgba(229, 9, 20, 0.9); color: white; padding: 10px 25px;
-            border-radius: 50px; font-weight: 600; font-size: 0.9rem; opacity: 0;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 200; pointer-events: none;
-        }
-        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        
+        /* Mobile Specific: AR Button Animation */
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+        #ar-button { animation: pulse 2s infinite ease-in-out; }
 
     </style>
 </head>
 <body>
 
-    <div id="toast">Model not found!</div>
-
     <header>
-        <div class="header-content">
-            <div class="logo">AFFINEX<span>.</span></div>
-            <div class="search-box">
-                <input type="text" id="search-input" class="search-input" placeholder="Search menu..." onkeypress="handleSearch(event)">
-                <span class="search-icon">🔍</span>
-            </div>
+        <div class="logo">AFFINEX</div>
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="SEARCH DISH...">
         </div>
     </header>
 
-    <div class="viewer-container">
-        <div id="progress-bar"><div id="update-bar"></div></div>
-
+    <div class="viewer-wrap">
         <model-viewer 
-            id="main-viewer"
+            id="ar-viewer"
             src="3DModel.glb" 
             ar 
             ar-modes="webxr scene-viewer quick-look" 
+            ar-scale="auto"
+            ar-placement="floor"
             camera-controls 
-            shadow-intensity="1.5" 
+            touch-action="pan-y"
+            shadow-intensity="2" 
             exposure="1"
-            environment-image="neutral"
-            auto-rotate
-            rotation-per-second="30deg">
+            auto-rotate>
             
             <button slot="ar-button" id="ar-button">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3zM12 8v8M8 12h8"/></svg>
-                LAUNCH IN AR
+                🚀 OPEN CAMERA (AR)
             </button>
         </model-viewer>
     </div>
 
-    <div class="bottom-card">
-        <h1 class="dish-title" id="item-name">Premium Box</h1>
-        <div class="dish-price" id="item-price">Rs. 250</div>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.4;">
-            Experience our premium quality in true 3D scale. Scan your table to place.
-        </p>
+    <div class="info-card">
+        <h2 class="title">Premium Tissue Box</h2>
+        <div class="price">Rs. 250</div>
+        <p style="color: #666; font-size: 0.8rem;">Click the button to place this item on your table.</p>
     </div>
-
-    <script>
-        // UX: Handle Loading Progress Bar
-        const modelViewer = document.querySelector('#main-viewer');
-        const progressBar = document.querySelector('#progress-bar');
-        const updateBar = document.querySelector('#update-bar');
-
-        modelViewer.addEventListener('progress', (event) => {
-            const progress = event.detail.totalProgress * 100;
-            updateBar.style.width = `${progress}%`;
-            if (progress === 100) {
-                setTimeout(() => { progressBar.classList.add('hide'); }, 500);
-            } else {
-                progressBar.classList.remove('hide');
-            }
-        });
-
-        // UX: Advanced Search Logic & UI Update
-        function handleSearch(event) {
-            if (event.key === 'Enter') {
-                const query = document.getElementById('search-input').value.toLowerCase().trim();
-                const itemName = document.getElementById('item-name');
-                const itemPrice = document.getElementById('item-price');
-
-                document.getElementById('search-input').blur(); // Hide keyboard on mobile
-
-                if (query.includes('tissue') || query.includes('box')) {
-                    changeModel('3DModel.glb', 'Premium Box', '250');
-                } else if (query !== '') {
-                    showToast(`"${query}" is not available yet.`);
-                }
-            }
-        }
-
-        // Function to smoothly change models
-        function changeModel(src, name, price) {
-            if (modelViewer.src !== src) {
-                // Reset progress bar
-                updateBar.style.width = '0%';
-                progressBar.classList.remove('hide');
-                
-                // Update Data
-                modelViewer.src = src;
-                document.getElementById('item-name').innerText = name;
-                document.getElementById('item-price').innerText = `Rs. ${price}`;
-            }
-        }
-
-        // Function to show Toast Notification
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.innerText = message;
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-    </script>
 
 </body>
 </html>

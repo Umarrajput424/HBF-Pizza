@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AFFINEX | AR Experience</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <style>
+        :root { --gold: #d4af37; --dark-bg: #121212; --card-bg: #1e1e1e; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--dark-bg); color: white; overflow-x: hidden; }
+        
+        /* Header Section */
+        header { padding: 40px 20px; text-align: center; background: linear-gradient(to bottom, #1a1a1a, var(--dark-bg)); }
+        .logo { font-size: 2rem; font-weight: 800; letter-spacing: 4px; color: var(--gold); margin-bottom: 5px; }
+        .tagline { font-size: 0.8rem; color: #888; text-transform: uppercase; }
+
+        /* AR Showcase Area */
+        .ar-display { width: 100%; height: 45vh; position: relative; background: radial-gradient(circle, #2a2a2a 0%, #121212 100%); }
+        model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
+
+        /* AR Button Overlay */
+        #ar-button {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--gold); color: black; border: none; padding: 12px 30px;
+            border-radius: 50px; font-weight: bold; font-size: 14px; cursor: pointer;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Menu List Section */
+        .menu-section { padding: 30px 20px; }
+        .section-title { font-size: 1.2rem; border-left: 4px solid var(--gold); padding-left: 15px; margin-bottom: 25px; }
+
+        .item-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .item-card { 
+            background: var(--card-bg); padding: 15px; border-radius: 20px; text-align: center;
+            border: 1px solid #333; transition: 0.3s ease;
+        }
+        .item-card:active { transform: scale(0.95); border-color: var(--gold); }
+        .item-emoji { font-size: 35px; margin-bottom: 10px; display: block; }
+        .item-name { font-size: 0.9rem; font-weight: 600; }
+        .item-price { color: var(--gold); font-size: 0.8rem; margin-top: 5px; display: block; }
+
+        footer { text-align: center; padding: 40px; color: #444; font-size: 0.7rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">AFFINEX</div>
+        <div class="tagline">Interactive 3D AR Menu</div>
+    </header>
+
+    <div class="ar-display">
+        <model-viewer id="dish-viewer" 
+            src="models/tissue-box.glb" 
+            ar ar-modes="webxr scene-viewer quick-look" 
+            camera-controls shadow-intensity="1.5" environment-image="neutral" auto-rotate>
+            <button slot="ar-button" id="ar-button">VIEW ON YOUR TABLE 🍽️</button>
+        </model-viewer>
+    </div>
+
+    <div class="menu-section">
+        <h2 class="section-title">TODAY'S SPECIALS</h2>
+        
+        <div class="item-grid">
+            <div class="item-card" onclick="updateViewer('models/tissue-box.glb', 'Premium Tissues')">
+                <span class="item-emoji">📦</span>
+                <span class="item-name">Premium Tissue</span>
+                <span class="item-price">Rs. 250</span>
+            </div>
+
+            <div class="item-card" onclick="updateViewer('models/burger.glb', 'Elite Burger')">
+                <span class="item-emoji">🍔</span>
+                <span class="item-name">Zinger Burger</span>
+                <span class="item-price">Rs. 550</span>
+            </div>
+
+            <div class="item-card" onclick="updateViewer('models/pizza.glb', 'Golden Pizza')">
+                <span class="item-emoji">🍕</span>
+                <span class="item-name">Cheese Pizza</span>
+                <span class="item-price">Rs. 1200</span>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        POWERED BY AFFINEX DIGITAL SOLUTIONS
+    </footer>
+
+    <script>
+        function updateViewer(modelPath, name) {
+            const viewer = document.querySelector('#dish-viewer');
+            viewer.src = modelPath;
+            // Scroll back to top to see the model
+            window.scrollTo({ top: 100, behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+</html>
